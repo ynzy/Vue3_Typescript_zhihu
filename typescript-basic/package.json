@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "@types/jquery": "^3.5.5"
+  },
+  "dependencies": {
+    "redux": "^4.0.5"
+  }
+}

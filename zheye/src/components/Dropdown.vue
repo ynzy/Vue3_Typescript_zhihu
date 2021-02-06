@@ -9,7 +9,8 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, ref } from 'vue'
+import { defineComponent, onMounted, onUnmounted, ref, watch } from 'vue'
+import useClickOutside from '@/hooks/useClickOutside'
 export default defineComponent({
   name: 'Dropdown',
   components: {},
@@ -25,23 +26,15 @@ export default defineComponent({
     const toggleOpen = () => {
       isOpen.value = !isOpen.value
     }
-    const handler = (e: MouseEvent) => {
-      if (dropdownRef.value) {
-        console.log(dropdownRef.value)
-        // 判断是否包含当前节点， isOpen是否是打开的
-        // node.contains(otherNode) 是否包含otherNode节点
-        // 因为e.target可能为null，contains里面要传的是节点，所有断言成HTMLElement
-        if (!dropdownRef.value.contains(e.target as HTMLElement) && isOpen.value) {
-          isOpen.value = false
-        }
+    const isClickOutside = useClickOutside(dropdownRef)
+    // 监听isClickOutside的变化，才能渲染视图
+    watch(isClickOutside, () => {
+      // 如果点击的是外面，并且isOpen是打开的，置为false
+      if (isClickOutside.value && isOpen.value) {
+        isOpen.value = false
       }
-    }
-    onMounted(() => {
-      document.addEventListener('click', handler)
     })
-    onUnmounted(() => {
-      document.removeEventListener('click', handler)
-    })
+
     return {
       isOpen,
       toggleOpen,

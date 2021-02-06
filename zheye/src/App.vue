@@ -1,15 +1,31 @@
 <template>
   <div class="container">
     <GlobalHeader :user="currentUser" />
-    <ColumnList :list="list" />
+    <!-- <ColumnList :list="list" /> -->
+    <form action="">
+      <div class="mb-3">
+        <label class="form-label">邮箱地址</label>
+        <validate-input :rules="emailRules" v-model="emailVal" placeholder="请输入邮箱地址"></validate-input>
+        {{ emailVal }}
+      </div>
+      <div class="mb-3">
+        <validate-input
+          type="password"
+          :rules="passwordRules"
+          v-model="passwordVal"
+          placeholder="请输入密码"
+        ></validate-input>
+      </div>
+    </form>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, reactive, ref } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import ColumnList, { ColumnProps } from '@/components/ColumnList.vue'
 import GlobalHeader, { UserProps } from '@/components/GlobalHeader.vue'
+import ValidateInput, { RulesProp } from '@/components/ValidateInput.vue'
 const currentUser: UserProps = {
   isLogin: true,
   name: 'asdf'
@@ -30,13 +46,25 @@ const testData: ColumnProps[] = [
       'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100'
   }
 ]
+
 export default defineComponent({
   name: 'App',
-  components: { ColumnList, GlobalHeader },
+  components: { ColumnList, GlobalHeader, ValidateInput },
   setup() {
+    const emailVal = ref('')
+    const passwordVal = ref('')
+    const emailRules: RulesProp = [
+      { type: 'required', message: '电子邮箱地址不能为空' },
+      { type: 'email', message: '请输入正确的电子邮箱地址' }
+    ]
+    const passwordRules: RulesProp = [{ type: 'required', message: '密码不能为空' }]
     return {
       list: testData,
-      currentUser
+      currentUser,
+      emailRules,
+      emailVal,
+      passwordRules,
+      passwordVal
     }
   }
 })

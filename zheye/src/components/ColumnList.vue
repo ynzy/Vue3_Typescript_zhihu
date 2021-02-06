@@ -23,7 +23,7 @@ export interface ColumnProps {
   description?: string
 }
 export default defineComponent({
-  name: '',
+  name: 'ColumnList',
   components: {},
   props: {
     list: {

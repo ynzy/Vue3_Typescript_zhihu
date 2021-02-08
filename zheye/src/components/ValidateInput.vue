@@ -14,7 +14,8 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, reactive } from 'vue'
+import { defineComponent, onMounted, PropType, reactive } from 'vue'
+import { emitter } from './ValidateForm.vue'
 const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
 export interface RuleProp {
@@ -31,7 +32,6 @@ export default defineComponent({
   },
   inheritAttrs: false,
   setup(props, context) {
-    console.log(context.attrs)
     const inputRef = reactive({
       val: props.modelValue || '',
       error: false,
@@ -45,7 +45,7 @@ export default defineComponent({
     const validateInput = () => {
       if (props.rules) {
         // 判断验证是否全部通过
-        const allPassed = props.rules.every(rule => {
+        const allPassed: boolean = props.rules.every(rule => {
           let passed = true
           inputRef.message = rule.message
           switch (rule.type) {
@@ -62,8 +62,13 @@ export default defineComponent({
           return passed
         })
         inputRef.error = !allPassed
+        return allPassed
       }
+      return true
     }
+    onMounted(() => {
+      emitter.emit('form-item-created', validateInput)
+    })
     return {
       inputRef,
       validateInput,

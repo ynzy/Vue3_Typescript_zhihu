@@ -24,7 +24,6 @@
 
 <script lang="ts">
 import ColumnList from '@/components/ColumnList.vue'
-import { testData } from '../testData'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
 import { computed } from 'vue'
@@ -36,8 +35,10 @@ export default {
   setup() {
     const store = useStore<GlobalDataProps>()
     let list = computed(() => store.state.columns)
+    const biggerColumnsLen = computed(() => store.getters.biggerColumnsLen)
     return {
-      list
+      list,
+      biggerColumnsLen
     }
   }
 }

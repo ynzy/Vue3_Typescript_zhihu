@@ -2,7 +2,7 @@
 <template>
   <div class="validate-input-container pb-3">
     <input
-      type="text"
+      v-if="tag !== 'textarea'"
       class="form-control"
       :class="{ 'is-invalid': inputRef.error }"
       :value="inputRef.val"
@@ -10,6 +10,15 @@
       @blur="validateInput"
       v-bind="$attrs"
     />
+    <textarea
+      v-else
+      class="form-control"
+      :class="{ 'is-invalid': inputRef.error }"
+      @blur="validateInput"
+      v-model="inputRef.val"
+      v-bind="$attrs"
+    >
+    </textarea>
     <span v-if="inputRef.error" class="invalid-feedback">{{ inputRef.message }}</span>
   </div>
 </template>
@@ -23,12 +32,16 @@ export interface RuleProp {
   message: string
 }
 export type RulesProp = RuleProp[]
-
+export type TagType = 'input' | 'textarea' // 想要渲染的type
 export default defineComponent({
   name: 'ValidateInput',
   props: {
     rules: Array as PropType<RulesProp>,
-    modelValue: String
+    modelValue: String,
+    tag: {
+      type: String as PropType<TagType>,
+      default: 'input'
+    }
   },
   inheritAttrs: false,
   setup(props, context) {
@@ -37,7 +50,7 @@ export default defineComponent({
       error: false,
       message: ''
     })
-    const updateValue = (e: KeyboardEvent) => {
+    const updateValue = (e: Event) => {
       const targetValue = (e.target as HTMLInputElement).value
       inputRef.val = targetValue
       context.emit('update:modelValue', targetValue)

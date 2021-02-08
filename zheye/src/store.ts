@@ -9,9 +9,20 @@ export interface ResponseType<P = {}> {
 export interface UserProps {
   isLogin: boolean
   nickName?: string
-  id?: string
+  _id?: string
+  column?: string
 }
-
+export interface PostProps {
+  _id?: string
+  title: string
+  excerpt?: string
+  content?: string
+  image?: string
+  createdAt?: string
+  column: string
+  author?: string | UserProps
+  isHTML?: boolean
+}
 export interface GlobalDataProps {
   columns: ColumnProps[]
   posts: PostProps[]
@@ -23,7 +34,9 @@ const store = createStore<GlobalDataProps>({
     columns: testData,
     posts: testPosts,
     user: {
-      isLogin: false
+      isLogin: true,
+      nickName: 'ljlkj',
+      column: '1'
     }
   },
   getters: {
@@ -41,6 +54,9 @@ const store = createStore<GlobalDataProps>({
   mutations: {
     login(state) {
       state.user = { ...state.user, isLogin: true, nickName: 'vilsjkl' }
+    },
+    createPost(state, newPost) {
+      state.posts.push(newPost)
     }
   }
 })

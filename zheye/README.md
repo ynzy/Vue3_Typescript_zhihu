@@ -1,24 +1,23 @@
 # zheye
-
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+```js
+┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                              href                                              │
+├──────────┬──┬─────────────────────┬────────────────────────┬───────────────────────────┬───────┤
+│ protocol │  │        auth         │          host          │           path            │ hash  │
+│   协议   │  │                     ├─────────────────┬──────┼──────────┬────────────────┤       │
+│          │  │                     │    hostname     │ port │ pathname │     search     │       │
+│          │  │                     │      网址       │  端口 │   路径   ├─┬──────────────┤       │
+│          │  │                     │                 │      │          │ │    query     │       │
+"  https:   //    user   :   pass   @ sub.example.com : 8080   /p/a/t/h  ?  query=string   #hash "
+│          │  │          │          │    hostname     │ port │          │                │       │
+│          │  │          │          ├─────────────────┴──────┤          │      查询参数   │       │
+│ protocol │  │ username │ password │          host          │          │                │       │
+├──────────┴──┼──────────┴──────────┼────────────────────────┤          │                │       │
+│   origin    │                     │         origin         │ pathname │     search     │ hash  │
+├─────────────┴─────────────────────┴────────────────────────┴──────────┴────────────────┴───────┤
+│                                              href                                              │
+└────────────────────────────────────────────────────────────────────────────────────────────────┘
+```

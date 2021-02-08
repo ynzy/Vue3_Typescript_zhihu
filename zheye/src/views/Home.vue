@@ -1,6 +1,6 @@
 <!-- Home -->
 <template>
-  <div class="home-page">
+  <div class="home-page container-md">
     <section class="py-5 text-center container">
       <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
@@ -14,14 +14,17 @@
     </section>
     <h4 class="font-weight-bold text-center">发现精彩</h4>
     <ColumnList :list="list"></ColumnList>
-    <button class="btn btn-primary mt-2 mb-5 mx-auto btn-block w-25">
-      加载更多
-    </button>
+    <div class="text-center">
+      <button class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25">
+        加载更多
+      </button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import ColumnList, { ColumnProps } from '@/components/ColumnList.vue'
+import ColumnList from '@/components/ColumnList.vue'
+import { ColumnProps } from '../testData'
 export default {
   name: 'Home',
   components: {

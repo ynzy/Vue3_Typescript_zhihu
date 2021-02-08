@@ -21,12 +21,7 @@
 <script lang="ts">
 // PropType 接收一个泛型，可以将Array构造函数返回到传入的泛型类型
 import { computed, defineComponent, PropType } from 'vue'
-export interface ColumnProps {
-  id: number
-  title?: string
-  avatar?: string
-  description?: string
-}
+import { ColumnProps } from '../testData'
 export default defineComponent({
   name: 'ColumnList',
   components: {},

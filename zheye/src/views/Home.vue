@@ -24,25 +24,18 @@
 
 <script lang="ts">
 import ColumnList from '@/components/ColumnList.vue'
-import { ColumnProps } from '../testData'
+import { testData } from '../testData'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '@/store'
+import { computed } from 'vue'
 export default {
   name: 'Home',
   components: {
     ColumnList
   },
   setup() {
-    const list: ColumnProps[] = [
-      {
-        id: 1,
-        title: 'test的专栏',
-        description: '这是test专栏'
-      },
-      {
-        id: 2,
-        title: 'test的专栏',
-        description: '这是test专栏'
-      }
-    ]
+    const store = useStore<GlobalDataProps>()
+    let list = computed(() => store.state.columns)
     return {
       list
     }

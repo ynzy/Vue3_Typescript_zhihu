@@ -28,6 +28,7 @@ import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ValidateInput, { RulesProp } from '@/components/ValidateInput.vue'
 import ValidateForm from '@/components/ValidateForm.vue'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'Login',
@@ -36,6 +37,7 @@ export default defineComponent({
     ValidateForm
   },
   setup() {
+    const store = useStore()
     const emailVal = ref('')
     const router = useRouter()
     const emailRules: RulesProp = [
@@ -50,7 +52,8 @@ export default defineComponent({
         email: emailVal.value,
         password: passwordVal.value
       }
-      router.push({ name: 'column', params: { id: 1 } })
+      router.push('/')
+      store.commit('login')
     }
     return {
       emailRules,

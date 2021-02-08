@@ -10,19 +10,19 @@ export interface UserProps {
   isLogin: boolean
   nickName?: string
   _id?: string
-  column?: string
+  columnId?: number
 }
-export interface PostProps {
-  _id?: string
-  title: string
-  excerpt?: string
-  content?: string
-  image?: string
-  createdAt?: string
-  column: string
-  author?: string | UserProps
-  isHTML?: boolean
-}
+// export interface PostProps {
+//   _id?: string
+//   title: string
+//   excerpt?: string
+//   content?: string
+//   image?: string
+//   createdAt?: string
+//   column: string
+//   author?: string | UserProps
+//   isHTML?: boolean
+// }
 export interface GlobalDataProps {
   columns: ColumnProps[]
   posts: PostProps[]
@@ -36,7 +36,7 @@ const store = createStore<GlobalDataProps>({
     user: {
       isLogin: true,
       nickName: 'ljlkj',
-      column: '1'
+      columnId: 1
     }
   },
   getters: {

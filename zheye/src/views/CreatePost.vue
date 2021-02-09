@@ -60,6 +60,7 @@ export default defineComponent({
             createdAt: new Date().toLocaleDateString()
           }
           store.commit('createPost', newPost)
+          router.push({ name: 'column', params: { id: columnId } })
         }
       }
     }

@@ -62,7 +62,7 @@ const postAndCommit = async (fn: Function, data: any, mutationName: string, comm
 
 const store = createStore<GlobalDataProps>({
   state: {
-    token: '',
+    token: localStorage.getItem('token') || '',
     loading: false,
     columns: [],
     posts: [],
@@ -100,6 +100,7 @@ const store = createStore<GlobalDataProps>({
     },
     login(state, data) {
       state.token = data.token
+      localStorage.setItem('token', data.token)
     }
   },
   actions: {

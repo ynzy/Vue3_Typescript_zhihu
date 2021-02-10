@@ -7,7 +7,7 @@
         </h4>
         <div class="row my-3 align-items-center">
           <div v-if="post.image" class="col-4">
-            <img :src="post.image.fitUrl" :alt="post.title" class="rounded-lg w-100" />
+            <img :src="post.image.url" :alt="post.title" class="rounded-lg w-100" />
           </div>
           <p :class="{ 'col-8': post.image }" class="text-muted">{{ post.excerpt }}</p>
         </div>
@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import { PostProps } from '../testData'
+import { PostProps } from '@/store'
 export default defineComponent({
   props: {
     list: {

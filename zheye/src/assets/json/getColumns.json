@@ -1,0 +1,81 @@
+// /api/columns?currentPage=1&pageSize=5
+{
+  "code": 0,
+  "data": {
+    "count": 11,
+    "list": [
+      {
+        "createdAt": "2020-08-20 22:21:10",
+        "__v": 0,
+        "avatar": {
+          "_id": "5f3e41a8b7d9c60b68cdd1ec",
+          "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5f3e41a8b7d9c60b68cdd1ec.jpg"
+        },
+        "featured": true,
+        "author": "5f3e86d62c56ee13bb830961",
+        "description": "酒店售货机，酒店经营，共享经济，新零售，共享数据线，关注灵趣科技，了解更多",
+        "title": "铺先生",
+        "_id": "5f3e86d62c56ee13bb83096c",
+        "key": 0
+      },
+      {
+        "createdAt": "2020-08-20 22:21:10",
+        "__v": 0,
+        "avatar": {
+          "_id": "5f3e3a17c305b1070f455202",
+          "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5f3e3a17c305b1070f455202.jpg"
+        },
+        "featured": true,
+        "author": "5f3e86d62c56ee13bb830960",
+        "description": "半吊子系统和程序狗，沉迷高端理论，日渐消瘦。",
+        "title": "Vehicle攻城狮",
+        "_id": "5f3e86d62c56ee13bb83096b",
+        "key": 1
+      },
+      {
+        "createdAt": "2020-08-20 22:21:10",
+        "avatar": {
+          "_id": "5ff92c5d9c7ab1263baba445",
+          "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ff92c5d9c7ab1263baba445.png"
+        },
+        "featured": true,
+        "author": "5f2918ed59d0b03366c0f0ad",
+        "description": "Vue  is a progressive framework for building user interfaces. The core library is focused on the view layer only1",
+        "title": "这是一个专业测试1专栏 vue31",
+        "_id": "5f4db92abb821789a5490ed3",
+        "key": 2
+      },
+      {
+        "createdAt": "2020-08-20 22:21:10",
+        "__v": 0,
+        "avatar": {
+          "_id": "5f3e41a8b7d9c60b68cdd1ec",
+          "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5f3e41a8b7d9c60b68cdd1ec.jpg"
+        },
+        "featured": true,
+        "author": "5f3e86d62c56ee13bb83095f",
+        "description": "公号：高斋CATTI，细致讲解让翻译学习更轻松！",
+        "title": "CATTI和MTI考研考试资料与资讯",
+        "_id": "5f3e86d62c56ee13bb83096a",
+        "key": 3
+      },
+      {
+        "createdAt": "2020-08-20 22:21:10",
+        "__v": 0,
+        "avatar": {
+          "_id": "5f3e3a17c305b1070f455202",
+          "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5f3e3a17c305b1070f455202.jpg"
+        },
+        "featured": true,
+        "author": "5f3e86d62c56ee13bb830962",
+        "description": "鞋神号：  sunmen123123",
+        "title": "我不是鞋神",
+        "_id": "5f3e86d62c56ee13bb830969",
+        "key": 4
+      }
+    ],
+    "pageSize": 5,
+    "currentPage": 1
+  },
+  "msg": "请求成功"
+}

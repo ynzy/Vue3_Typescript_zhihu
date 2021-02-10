@@ -22,18 +22,12 @@ import { useStore } from 'vuex'
 import { computed, defineComponent, onMounted } from 'vue'
 import GlobalHeader from '@/components/GlobalHeader.vue'
 import { GlobalDataProps } from '@/store'
-import { getColumns } from './api/columnController'
 export default defineComponent({
   name: 'App',
   components: { GlobalHeader },
   setup() {
     const store = useStore<GlobalDataProps>()
     const currentUser = computed(() => store.state.user)
-    onMounted(async () => {
-      let [err, res] = await getColumns({ currentPage: 1, pageSize: 5 })
-      console.log(err)
-      console.log(res)
-    })
     return {
       currentUser
     }

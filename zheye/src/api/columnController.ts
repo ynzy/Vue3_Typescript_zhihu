@@ -1,10 +1,6 @@
 import request from '@/utils/request'
 import { awaitWrap } from '@/utils/index.ts'
-
-interface paging {
-  currentPage: string | number // 当前页
-  pageSize: string | number // 每页条数
-}
+import { paging, IGetCid, IgetPosts } from './index'
 
 /**
  * 获取专栏列表
@@ -17,6 +13,37 @@ export const getColumns = (params: paging) => {
       url: '/columns',
       method: 'get',
       params,
+      loading: false
+    })
+  )
+}
+/**
+ * 获取专栏列表
+ * @param {} currentPage
+ * @param {} pageSize
+ */
+
+export const getColumnPosts = (params: IgetPosts) => {
+  let { cid, ...newParams } = params
+  return awaitWrap(
+    request({
+      url: `/columns/${cid}/posts`,
+      method: 'get',
+      params: newParams,
+      loading: false
+    })
+  )
+}
+/**
+ * 获得一个专栏详情
+ * @param {} cid
+ */
+
+export const getColumn = (cid: IGetCid) => {
+  return awaitWrap(
+    request({
+      url: `/columns/${cid}`,
+      method: 'get',
       loading: false
     })
   )

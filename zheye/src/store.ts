@@ -1,6 +1,6 @@
 import { createStore, useStore } from 'vuex'
-import { testData, testPosts, ColumnProps, PostProps } from './testData'
-
+import { IGetCid, IgetPosts, paging } from './api/index'
+import { getColumn, getColumns, getColumnPosts } from './api/columnController'
 export interface ResponseType<P = {}> {
   code: number
   msg: string
@@ -12,17 +12,29 @@ export interface UserProps {
   _id?: string
   columnId?: number
 }
-// export interface PostProps {
-//   _id?: string
-//   title: string
-//   excerpt?: string
-//   content?: string
-//   image?: string
-//   createdAt?: string
-//   column: string
-//   author?: string | UserProps
-//   isHTML?: boolean
-// }
+export interface ImageProps {
+  _id?: string
+  url?: string
+  createdAt?: string
+  fitUrl?: string
+}
+export interface ColumnProps {
+  _id: string
+  title: string
+  avatar?: ImageProps
+  description: string
+}
+export interface PostProps {
+  _id?: string
+  title: string
+  excerpt?: string
+  content?: string
+  image?: ImageProps
+  createdAt?: string
+  column: string
+  author?: string | UserProps
+  isHTML?: boolean
+}
 export interface GlobalDataProps {
   columns: ColumnProps[]
   posts: PostProps[]
@@ -31,8 +43,8 @@ export interface GlobalDataProps {
 
 const store = createStore<GlobalDataProps>({
   state: {
-    columns: testData,
-    posts: testPosts,
+    columns: [],
+    posts: [],
     user: {
       isLogin: false,
       nickName: 'ljlkj',
@@ -40,15 +52,12 @@ const store = createStore<GlobalDataProps>({
     }
   },
   getters: {
-    biggerColumnsLen(state) {
-      return state.columns.filter(c => c.id > 2).length
-    },
     // 返回一个函数，传参
-    getColumnById: state => (id: number) => {
-      return state.columns.find(c => c.id === id)
+    getColumnById: state => (id: string) => {
+      return state.columns.find(c => c._id === id)
     },
-    getPostsByCid: state => (cid: number) => {
-      return state.posts.filter(post => post.columnId === cid)
+    getPostsByCid: state => (cid: string) => {
+      return state.posts.filter(post => post.column === cid)
     }
   },
   mutations: {
@@ -57,6 +66,32 @@ const store = createStore<GlobalDataProps>({
     },
     createPost(state, newPost) {
       state.posts.push(newPost)
+    },
+    fetchColums(state, data) {
+      state.columns = data.list
+    },
+    fetchColumn(state, data) {
+      state.columns = [data]
+    },
+    fetchPosts(state, data) {
+      state.posts = data.list
+    }
+  },
+  actions: {
+    async fetchColumns({ commit }, params: paging) {
+      let [err, res] = await getColumns(params)
+      if (err) return console.log(err)
+      commit('fetchColums', res.data)
+    },
+    async fetchColumn({ commit }, cid: IGetCid) {
+      let [err, res] = await getColumn(cid)
+      if (err) return console.log(err)
+      commit('fetchColumn', res.data)
+    },
+    async fetchPosts({ commit }, params: IgetPosts) {
+      let [err, res] = await getColumnPosts(params)
+      if (err) return console.log(err)
+      commit('fetchPosts', res.data)
     }
   }
 })

@@ -30,7 +30,9 @@ service.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     // Add Authorization header to every request, you can add other custom headers here
     // 在此处添加请求头等，如添加 token
-    // config.headers['Authorization'] = 'tokentokentokentokentokentokenhhh'
+    if (store.state.token) {
+      config.headers['Authorization'] = `Bearer ${store.state.token}`
+    }
     if (config.loading) {
       store.commit('setLoading', true)
     }

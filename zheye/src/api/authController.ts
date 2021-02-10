@@ -18,3 +18,13 @@ export const login = (data: ILogin) => {
     })
   )
 }
+
+export const getCurrentUser = () => {
+  return awaitWrap(
+    request({
+      url: `/user/current`,
+      method: 'get',
+      loading: false
+    })
+  )
+}

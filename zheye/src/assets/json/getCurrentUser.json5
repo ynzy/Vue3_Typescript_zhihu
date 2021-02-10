@@ -1,0 +1,17 @@
+// /api/user/current
+
+{
+  code: 0,
+  data: {
+    _id: '5f2918ed59d0b03366c0f0ad',
+    email: '111@test.com',
+    nickName: 'aaaaa',
+    column: '5f4db92abb821789a5490ed3',
+    description: 'bbbbb',
+    avatar: {
+      _id: '60176ca19c7ab1263baba8fb',
+      url: 'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/60176ca19c7ab1263baba8fb.jpg'
+    }
+  },
+  msg: '请求成功'
+}

@@ -1,7 +1,7 @@
 import { Commit, createStore, useStore } from 'vuex'
 import { IGetCid, IgetPosts, ILogin, paging } from './api/index'
 import { getColumn, getColumns, getColumnPosts } from './api/columnController'
-import { login } from './api/authController'
+import { getCurrentUser, login } from './api/authController'
 export interface ResponseType<P = {}> {
   code: number
   msg: string
@@ -11,7 +11,10 @@ export interface UserProps {
   isLogin: boolean
   nickName?: string
   _id?: string
-  columnId?: number
+  column?: string
+  email?: string
+  avatar?: ImageProps
+  description?: string
 }
 export interface ImageProps {
   _id?: string
@@ -48,6 +51,7 @@ const getAndCommit = async (fn: Function, params: any, mutationName: string, com
   let [err, res] = await fn(params)
   if (err) return console.log(err)
   commit(mutationName, res.data)
+  return res.data
 }
 const postAndCommit = async (fn: Function, data: any, mutationName: string, commit: Commit) => {
   let [err, res] = await fn(data)
@@ -63,9 +67,7 @@ const store = createStore<GlobalDataProps>({
     columns: [],
     posts: [],
     user: {
-      isLogin: false,
-      nickName: '',
-      columnId: undefined
+      isLogin: false
     }
   },
   getters: {
@@ -78,9 +80,6 @@ const store = createStore<GlobalDataProps>({
     }
   },
   mutations: {
-    /* login(state) {
-      state.user = { ...state.user, isLogin: true, nickName: 'vilsjkl' }
-    }, */
     createPost(state, newPost) {
       state.posts.push(newPost)
     },
@@ -96,8 +95,10 @@ const store = createStore<GlobalDataProps>({
     setLoading(state, status) {
       state.loading = status
     },
+    fetchCurrentUser(state, data) {
+      state.user = { isLogin: true, ...data }
+    },
     login(state, data) {
-      console.log(data)
       state.token = data.token
     }
   },
@@ -111,8 +112,17 @@ const store = createStore<GlobalDataProps>({
     fetchPosts({ commit }, params: IgetPosts) {
       getAndCommit(getColumnPosts, params, 'fetchPosts', commit)
     },
+    fetchCurrentUser({ commit }) {
+      return getAndCommit(getCurrentUser, null, 'fetchCurrentUser', commit)
+    },
     login({ commit }, data: ILogin) {
       return postAndCommit(login, data, 'login', commit)
+    },
+    // 组合action
+    loadinAndFetch({ dispatch }, loginData) {
+      return dispatch('login', loginData).then(() => {
+        return dispatch('fetchCurrentUser')
+      })
     }
   }
 })

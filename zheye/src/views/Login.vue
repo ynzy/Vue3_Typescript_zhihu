@@ -52,8 +52,8 @@ export default defineComponent({
         email: emailVal.value,
         password: passwordVal.value
       }
-      let res = await store.dispatch('login', payload)
-      if (!res.token) return
+      let res = await store.dispatch('loadinAndFetch', payload)
+      // console.log(res)
       router.push('/')
     }
     return {

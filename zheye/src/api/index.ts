@@ -8,3 +8,8 @@ export interface IGetCid {
 }
 
 export type IgetPosts = IGetCid & paging
+
+export interface ILogin {
+  email: string
+  password: string
+}

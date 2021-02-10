@@ -1,6 +1,7 @@
 /**
  * @description [ axios 请求封装]
  */
+import store from '@/store'
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios'
 // import { Message, Modal } from 'view-design' // UI组件库
 import router from '../router'
@@ -30,6 +31,9 @@ service.interceptors.request.use(
     // Add Authorization header to every request, you can add other custom headers here
     // 在此处添加请求头等，如添加 token
     // config.headers['Authorization'] = 'tokentokentokentokentokentokenhhh'
+    if (config.loading) {
+      store.commit('setLoading', true)
+    }
     return config
   },
   (error: any) => {
@@ -39,9 +43,11 @@ service.interceptors.request.use(
 
 // Response interceptors
 service.interceptors.response.use(
-  (response: AxiosResponse) => {
+  async (response: AxiosResponse) => {
+    // await new Promise(resovle => setTimeout(resovle, 3000))
+    store.commit('setLoading', false)
     const res = response.data
-    console.log(res)
+    // console.log(res)
     if (res.code !== 0) {
       // ;(Message as any).error({
       //   content: res.info || 'Error',

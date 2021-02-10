@@ -2,6 +2,7 @@
   <div class="d-flex flex-column h-100">
     <div class="container">
       <GlobalHeader :user="currentUser" />
+      <Loading text="拼命加载中" background="rgba(0,0,0,0.8)" v-if="isLoading" />
       <router-view></router-view>
       <footer class="text-center py-4 text-secondary bg-light mt-6">
         <small>
@@ -22,14 +23,17 @@ import { useStore } from 'vuex'
 import { computed, defineComponent, onMounted } from 'vue'
 import GlobalHeader from '@/components/GlobalHeader.vue'
 import { GlobalDataProps } from '@/store'
+import Loading from '@/components/Loading.vue'
 export default defineComponent({
   name: 'App',
-  components: { GlobalHeader },
+  components: { GlobalHeader, Loading },
   setup() {
     const store = useStore<GlobalDataProps>()
     const currentUser = computed(() => store.state.user)
+    const isLoading = computed(() => store.state.loading)
     return {
-      currentUser
+      currentUser,
+      isLoading
     }
   }
 })

@@ -38,22 +38,23 @@ export default defineComponent({
   },
   setup() {
     const store = useStore()
-    const emailVal = ref('')
+    const emailVal = ref('111@test.com')
     const router = useRouter()
     const emailRules: RulesProp = [
       { type: 'required', message: '电子邮箱地址不能为空' },
       { type: 'email', message: '请输入正确的电子邮箱格式' }
     ]
-    const passwordVal = ref('')
+    const passwordVal = ref('111111')
     const passwordRules: RulesProp = [{ type: 'required', message: '密码不能为空' }]
-    const onFormSubmit = (result: boolean) => {
+    const onFormSubmit = async (result: boolean) => {
       if (!result) return
       const payload = {
         email: emailVal.value,
         password: passwordVal.value
       }
+      let res = await store.dispatch('login', payload)
+      if (!res.token) return
       router.push('/')
-      store.commit('login')
     }
     return {
       emailRules,

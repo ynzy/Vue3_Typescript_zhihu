@@ -32,7 +32,7 @@ export default defineComponent({
     const column = computed(() => store.getters.getColumnById(currentId))
     const list = computed(() => store.getters.getPostsByCid(currentId))
     onMounted(() => {
-      store.dispatch('fetchColumn', currentId)
+      store.dispatch('fetchColumn', { cid: currentId })
       store.dispatch('fetchPosts', { cid: currentId, currentPage: 1, pageSize: 5 })
     })
     return {

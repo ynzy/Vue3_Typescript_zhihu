@@ -13,7 +13,7 @@ export const getColumns = (params: paging) => {
       url: '/columns',
       method: 'get',
       params,
-      loading: false
+      loading: true
     })
   )
 }
@@ -30,7 +30,7 @@ export const getColumnPosts = (params: IgetPosts) => {
       url: `/columns/${cid}/posts`,
       method: 'get',
       params: newParams,
-      loading: false
+      loading: true
     })
   )
 }
@@ -39,12 +39,12 @@ export const getColumnPosts = (params: IgetPosts) => {
  * @param {} cid
  */
 
-export const getColumn = (cid: IGetCid) => {
+export const getColumn = ({ cid }: IGetCid) => {
   return awaitWrap(
     request({
       url: `/columns/${cid}`,
       method: 'get',
-      loading: false
+      loading: true
     })
   )
 }

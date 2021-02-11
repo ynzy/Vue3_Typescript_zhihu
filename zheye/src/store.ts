@@ -112,7 +112,6 @@ const store = createStore<GlobalDataProps>({
       state.loading = status
     },
     setError(state, e: GlobalErrorProps) {
-      console.log(e)
       state.error = e
     },
     fetchCurrentUser(state, data) {

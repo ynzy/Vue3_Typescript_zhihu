@@ -46,6 +46,7 @@ service.interceptors.request.use(
 // Response interceptors
 service.interceptors.response.use(
   async (response: AxiosResponse) => {
+    store.commit('setError', { status: false, message: '' })
     // await new Promise(resovle => setTimeout(resovle, 3000))
     store.commit('setLoading', false)
     const res = response.data

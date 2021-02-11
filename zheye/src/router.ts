@@ -31,6 +31,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   // 需要登录
+  console.log(store.state.user)
   if (to.meta.requiredLogin && !store.state.user.isLogin) {
     next({ name: 'login' })
     // 已经登录，访问登录页，跳转首页

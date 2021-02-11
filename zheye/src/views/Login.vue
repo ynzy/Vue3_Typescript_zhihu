@@ -52,9 +52,10 @@ export default defineComponent({
         email: emailVal.value,
         password: passwordVal.value
       }
-      let res = await store.dispatch('loadinAndFetch', payload)
-      // console.log(res)
-      router.push('/')
+      let [err, res] = await store.dispatch('loadinAndFetch', payload)
+      console.log(err)
+      console.log(res)
+      // router.push('/')
     }
     return {
       emailRules,

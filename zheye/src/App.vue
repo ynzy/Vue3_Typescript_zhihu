@@ -2,6 +2,7 @@
   <div class="d-flex flex-column h-100">
     <div class="container">
       <GlobalHeader :user="currentUser" />
+      <h1>{{ error.message }}</h1>
       <Loading text="拼命加载中" background="rgba(0,0,0,0.8)" v-if="isLoading" />
       <router-view></router-view>
       <footer class="text-center py-4 text-secondary bg-light mt-6">
@@ -32,6 +33,8 @@ export default defineComponent({
     const currentUser = computed(() => store.state.user)
     const isLoading = computed(() => store.state.loading)
     const token = computed(() => store.state.token)
+    const error = computed(() => store.state.error)
+
     onMounted(() => {
       if (!currentUser.value.isLogin && token.value) {
         store.dispatch('fetchCurrentUser')
@@ -39,7 +42,8 @@ export default defineComponent({
     })
     return {
       currentUser,
-      isLoading
+      isLoading,
+      error
     }
   }
 })

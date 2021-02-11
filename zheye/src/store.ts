@@ -39,7 +39,12 @@ export interface PostProps {
   author?: string | UserProps
   isHTML?: boolean
 }
+export interface GlobalErrorProps {
+  status: boolean
+  message?: string
+}
 export interface GlobalDataProps {
+  error: GlobalErrorProps
   token: string
   loading: boolean
   columns: ColumnProps[]
@@ -49,19 +54,30 @@ export interface GlobalDataProps {
 
 const getAndCommit = async (fn: Function, params: any, mutationName: string, commit: Commit) => {
   let [err, res] = await fn(params)
-  if (err) return console.log(err)
-  commit(mutationName, res.data)
-  return res.data
+  if (err) {
+    console.log(err)
+    return [err, res]
+  }
+  commit(mutationName, res && res.data)
+  return [err, res]
 }
 const postAndCommit = async (fn: Function, data: any, mutationName: string, commit: Commit) => {
-  let [err, res] = await fn(data)
-  if (err) return console.log(err)
-  commit(mutationName, res.data)
-  return res.data
+  try {
+    let [err, res] = await fn(data)
+    if (err) {
+      console.log(err)
+      return [err, res]
+    }
+    commit(mutationName, res && res.data)
+    return [err, res]
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const store = createStore<GlobalDataProps>({
   state: {
+    error: { status: false },
     token: localStorage.getItem('token') || '',
     loading: false,
     columns: [],
@@ -94,6 +110,10 @@ const store = createStore<GlobalDataProps>({
     },
     setLoading(state, status) {
       state.loading = status
+    },
+    setError(state, e: GlobalErrorProps) {
+      console.log(e)
+      state.error = e
     },
     fetchCurrentUser(state, data) {
       state.user = { isLogin: true, ...data }

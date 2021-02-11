@@ -3,7 +3,7 @@
     <div class="container">
       <GlobalHeader :user="currentUser" />
       <!-- <Message type="error" :message="error.message" v-if="error.status" /> -->
-      <h1>{{ error.message }}</h1>
+      <!-- <h1>{{ error.message }}</h1> -->
       <Loading text="拼命加载中" background="rgba(0,0,0,0.8)" v-if="isLoading" />
 
       <router-view></router-view>

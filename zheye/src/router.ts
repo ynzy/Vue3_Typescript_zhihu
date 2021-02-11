@@ -16,6 +16,12 @@ const router = createRouter({
       meta: { redirectAlreadyLogin: true }
     },
     {
+      path: '/signup',
+      name: 'signup',
+      component: () => import('@/views/Signup.vue'),
+      meta: { redirectAlreadyLogin: true }
+    },
+    {
       path: '/create',
       name: 'create',
       component: () => import('@/views/CreatePost.vue'),

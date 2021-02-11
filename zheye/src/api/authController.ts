@@ -18,7 +18,27 @@ export const login = (data: ILogin) => {
     })
   )
 }
+/**
+ * 注册
+ * @param {} email
+ * @param {} password
+ * @param {} nickName
+ */
 
+export const register = (data: ILogin) => {
+  return awaitWrap(
+    request({
+      url: `/users`,
+      method: 'post',
+      data,
+      loading: true
+    })
+  )
+}
+
+/**
+ * 获取当前用户信息
+ */
 export const getCurrentUser = () => {
   return awaitWrap(
     request({

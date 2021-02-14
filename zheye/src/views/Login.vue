@@ -57,9 +57,9 @@ export default defineComponent({
       if (err) return console.log(err)
       console.log(res)
       createMessage('登录成功 2秒后跳转首页', 'success')
-      setTimeout(() => {
-        router.push('/')
-      }, 2000)
+      // setTimeout(() => {
+      router.push('/')
+      // }, 2000)
     }
     return {
       emailRules,

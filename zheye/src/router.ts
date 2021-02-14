@@ -35,16 +35,36 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
-  // 需要登录
-  console.log(store.state.user)
-  if (to.meta.requiredLogin && !store.state.user.isLogin) {
-    next({ name: 'login' })
-    // 已经登录，访问登录页，跳转首页
-  } else if (to.meta.redirectAlreadyLogin && store.state.user.isLogin) {
-    next('/')
+router.beforeEach(async (to, from, next) => {
+  const { user, token } = store.state
+  const { requiredLogin, redirectAlreadyLogin } = to.meta
+  if (!user.isLogin) {
+    if (token) {
+      let [err, res] = await store.dispatch('fetchCurrentUser')
+      if (err) {
+        console.log(err)
+        localStorage.removeItem('token')
+        next('login')
+        return
+      }
+      if (redirectAlreadyLogin) {
+        next('/')
+      } else {
+        next()
+      }
+    } else {
+      if (requiredLogin) {
+        next('login')
+      } else {
+        next()
+      }
+    }
   } else {
-    next()
+    if (redirectAlreadyLogin) {
+      next('/')
+    } else {
+      next()
+    }
   }
 })
 

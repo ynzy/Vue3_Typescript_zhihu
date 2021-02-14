@@ -38,15 +38,15 @@ export default defineComponent({
     const currentUser = computed(() => store.state.user)
     console.log(currentUser.value)
     const isLoading = computed(() => store.state.loading)
-    const token = computed(() => store.state.token)
+    // const token = computed(() => store.state.token)
     const error = computed(() => store.state.error)
 
     onMounted(() => {
-      if (!currentUser.value.isLogin && token.value) {
-        store.dispatch('fetchCurrentUser').then(() => {
-          router.replace('/')
-        })
-      }
+      // if (!currentUser.value.isLogin && token.value) {
+      //   store.dispatch('fetchCurrentUser').then(() => {
+      //     router.replace('/')
+      //   })
+      // }
     })
     watch(
       () => error.value.status,

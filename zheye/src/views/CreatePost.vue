@@ -1,7 +1,12 @@
 <template>
   <div class="create-post-page">
     <h4>新建文章</h4>
-    <input type="file" name="file" @change.prevent="handleFileChange" />
+    <!-- <input type="file" name="file" @change.prevent="handleFileChange" /> -->
+    <Uploader :action="'/upload'" :beforeUpload="beforeUpload" @file-uploaded="onFileUploaded">
+      <template #uploaded="dataProps">
+        <img :src="dataProps.uploadedData.data.url" width="500" alt="" />
+      </template>
+    </Uploader>
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">文章标题：</label>
@@ -28,16 +33,19 @@
 import { defineComponent, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
-import { GlobalDataProps } from '@/store'
+import { GlobalDataProps, ResponseType, ImageProps } from '@/store'
 import { PostProps } from '@/store'
 import ValidateInput, { RulesProp } from '@/components/ValidateInput.vue'
 import ValidateForm from '@/components/ValidateForm.vue'
-import { upload } from '@/api/uploadController'
+
+import Uploader from '@/components/Uploader.vue'
+import { createMessage } from '@/components/createMessage'
 export default defineComponent({
   name: 'Login',
   components: {
     ValidateInput,
-    ValidateForm
+    ValidateForm,
+    Uploader
   },
   setup() {
     const uploadedData = ref()
@@ -66,18 +74,15 @@ export default defineComponent({
         }
       }
     }
-    const handleFileChange = async (e: Event) => {
-      const target = e.target as HTMLInputElement
-      const files = target.files
-      console.log(files)
-
-      if (!files) return
-      const uploadeFile = files[0]
-      const formData = new FormData()
-      formData.append(uploadeFile.name, uploadeFile)
-      let [err, res] = await upload(formData)
-      if (err) return console.log(err)
-      console.log(res)
+    const beforeUpload = (file: File) => {
+      const isJPG = file.type === 'image/jpeg'
+      if (!isJPG) {
+        createMessage('上传图片只能是JPG格式', 'error')
+      }
+      return isJPG
+    }
+    const onFileUploaded = (rawData: ResponseType<ImageProps>) => {
+      createMessage(`上传图片ID${rawData.data._id}`, 'success')
     }
     return {
       titleRules,
@@ -87,7 +92,8 @@ export default defineComponent({
       onFormSubmit,
       uploadedData,
       isEditMode,
-      handleFileChange
+      beforeUpload,
+      onFileUploaded
     }
   }
 })

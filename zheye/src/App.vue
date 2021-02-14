@@ -29,6 +29,7 @@ import { GlobalDataProps } from '@/store'
 import Loading from '@/components/Loading.vue'
 import Message from '@/components/Message.vue'
 import { createMessage } from '@/components/createMessage'
+import router from './router'
 export default defineComponent({
   name: 'App',
   components: { GlobalHeader, Loading, Message },
@@ -42,7 +43,9 @@ export default defineComponent({
 
     onMounted(() => {
       if (!currentUser.value.isLogin && token.value) {
-        store.dispatch('fetchCurrentUser')
+        store.dispatch('fetchCurrentUser').then(() => {
+          router.replace('/')
+        })
       }
     })
     watch(

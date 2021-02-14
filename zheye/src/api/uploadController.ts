@@ -7,10 +7,10 @@ import { ILogin } from './index'
  * @param {} file
  */
 
-export const upload = (data: FormData) => {
+export const upload = (url: string, data: FormData) => {
   return awaitWrap(
     request({
-      url: `/upload`,
+      url, //: `/upload`
       method: 'post',
       data,
       headers: {

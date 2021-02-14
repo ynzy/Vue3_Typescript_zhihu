@@ -1,0 +1,14 @@
+// /upload
+
+{
+  code: 0,
+  data: {
+    __v: 0,
+    url: 'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/60293aee9c7ab1263babaafc.jpg',
+    filename: 'u=1320272459,772040234&fm=26&gp=0.jpg',
+    extname: '.jpg',
+    _id: '60293aee9c7ab1263babaafc',
+    createdAt: '2021-02-14T14:59:58.522Z'
+  },
+  msg: '请求成功'
+}

@@ -2,6 +2,7 @@ import { Commit, createStore, useStore } from 'vuex'
 import { IGetCid, IgetPosts, ILogin, paging } from './api/index'
 import { getColumn, getColumns, getColumnPosts } from './api/columnController'
 import { getCurrentUser, login } from './api/authController'
+import { post } from './api/postsController'
 export interface ResponseType<P = {}> {
   code: number
   msg: string
@@ -33,7 +34,7 @@ export interface PostProps {
   title: string
   excerpt?: string
   content?: string
-  image?: ImageProps
+  image?: ImageProps | string
   createdAt?: string
   column: string
   author?: string | UserProps
@@ -137,6 +138,9 @@ const store = createStore<GlobalDataProps>({
     },
     login({ commit }, data: ILogin) {
       return postAndCommit(login, data, 'login', commit)
+    },
+    createPost({ commit }, data) {
+      return postAndCommit(post, data, 'createPost', commit)
     },
     // 组合action
     loadinAndFetch({ dispatch }, loginData) {

@@ -18,3 +18,10 @@ export interface IRegister {
   password: string
   nickName: string
 }
+export interface ICreatePost {
+  title: string
+  content: string
+  image: string
+  column: string
+  author: string
+}

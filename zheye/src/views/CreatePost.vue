@@ -73,20 +73,30 @@ export default defineComponent({
     const titleRules: RulesProp = [{ type: 'required', message: '文章标题不能为空' }]
     const contentVal = ref('')
     const contentRules: RulesProp = [{ type: 'required', message: '文章详情不能为空' }]
+    let imageId = ''
     onMounted(() => {})
-    const onFormSubmit = (result: boolean) => {
+    const onFormSubmit = async (result: boolean) => {
       if (result) {
         const { column, _id } = store.state.user
         if (column) {
           const newPost: PostProps = {
-            _id: new Date().getTime() + '',
             title: titleVal.value,
             content: contentVal.value,
             column,
-            createdAt: new Date().toLocaleDateString()
+            author: _id
           }
-          store.commit('createPost', newPost)
-          router.push({ name: 'column', params: { id: column } })
+          if (imageId) {
+            newPost.image = imageId
+          }
+          let [err, res] = await store.dispatch('createPost', newPost)
+          if (err) {
+            createMessage(err, 'error')
+            return
+          }
+          createMessage('发表成功，2秒后跳转到文章', 'success', 2000)
+          setTimeout(() => {
+            router.push({ name: 'column', params: { id: column } })
+          }, 2000)
         }
       }
     }
@@ -99,6 +109,9 @@ export default defineComponent({
     }
     const onFileUploaded = (rawData: ResponseType<ImageProps>) => {
       createMessage(`上传图片ID${rawData.data._id}`, 'success')
+      if (rawData.data._id) {
+        imageId = rawData.data._id
+      }
     }
     const uploadCheck = (file: File) => {
       const { passed, error } = beforeUploadCheck(file, { format: ['image/jpeg', 'image/png'], size: 4 })

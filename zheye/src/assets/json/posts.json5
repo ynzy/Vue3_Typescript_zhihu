@@ -1,0 +1,30 @@
+// /api/posts
+
+{
+  code: 0,
+  data: {
+    __v: 0,
+    title: '撒地方撒地方',
+    content: '阿斯顿发送到发',
+    column: '5f4db92abb821789a5490ed3',
+    author: {
+      _id: '5f2918ed59d0b03366c0f0ad',
+      email: '111@test.com',
+      nickName: 'aaaaa',
+      description: 'bbbbb',
+      avatar: {
+        _id: '60176ca19c7ab1263baba8fb',
+        url: 'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/60176ca19c7ab1263baba8fb.jpg'
+      }
+    },
+    image: {
+      _id: '6029c9489c7ab1263babaaff',
+      url: 'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/6029c9489c7ab1263babaaff.jpg'
+    },
+    excerpt: '阿斯顿发送到发',
+    _id: '6029c94e9c7ab1263babab00',
+    updatedAt: '2021-02-15T01:07:26.291Z',
+    createdAt: '2021-02-15 09:07:26'
+  },
+  msg: '请求成功'
+}

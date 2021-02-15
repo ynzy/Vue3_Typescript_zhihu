@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 import { awaitWrap } from '@/utils/index.ts'
-import { paging, IGetCid, ICreatePost } from './index'
+import { IGetCid, ICreatePost } from './index'
 
 /**
  * 获得单个文章信息
@@ -35,14 +35,14 @@ export const updatePost = (data: any) => {
   )
 }
 /**
- * 获得单个文章信息
- * @param {} cid
+ * 新建一篇文章
  */
-export const post = (params: IGetCid) => {
+export const post = (data: ICreatePost) => {
   return awaitWrap(
     request({
-      url: `/posts/${params.cid}`,
-      method: 'get',
+      url: `/posts`,
+      method: 'post',
+      data,
       loading: false
     })
   )

@@ -65,6 +65,42 @@ export function addColumnAvatar(data: ColumnProps | UserProps, width: number, he
  * 对象转数组
  * @param obj
  */
+// 添加泛型
 export const objToArr = <T>(obj: { [key: string]: T }) => {
   return Object.keys(obj).map(key => obj[key])
 }
+
+/**
+ * 数组转对象
+ * @param arr
+ */
+// 添加泛型T
+// <T extends {_id?:string}> 约束泛型，类型推导，保证有一个_id属性
+export const arrToObj = <T extends { _id?: string }>(arr: Array<T>) => {
+  return arr.reduce((prve, current) => {
+    if (current._id) {
+      prve[current._id] = current
+    }
+    return prve
+  }, {} as { [key: string]: T }) // 类型断言，我知道它是个什么类型
+}
+
+/* interface TestProps {
+  _id: string
+  name: string
+}
+
+const testData: TestProps[] = [
+  { _id: '1', name: 'a' },
+  { _id: '2', name: 'b' }
+]
+
+const testData2: { [key: string]: TestProps } = {
+  1: { _id: '1', name: 'a' },
+  2: { _id: '2', name: 'b' }
+}
+
+const result = arrToObj(testData)
+console.log(result)
+const result2 = objToArr(testData2)
+console.log(result2) */

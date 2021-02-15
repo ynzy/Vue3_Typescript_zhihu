@@ -1,13 +1,5 @@
 <template>
   <div class="post-detail-page">
-    <!--     <Modal
-      title="删除文章"
-      :visible="modalIsVisible"
-      @modal-on-close="modalIsVisible = false"
-      @modal-on-confirm="hideAndDelete"
-    >
-      <p>确定要删除这篇文章吗？</p>
-    </Modal> -->
     <article class="w-75 mx-auto mb-5 pb-3" v-if="currentPost">
       <img :src="currentImageUrl" alt="currentPost.title" class="rounded-lg img-fluid my-4" v-if="currentImageUrl" />
       <h2 class="mb-4">{{ currentPost.title }}</h2>
@@ -18,6 +10,7 @@
         <span class="text-muted col text-right font-italic">发表于：{{ currentPost.createdAt }}</span>
       </div>
       <div v-html="currentHTML"></div>
+      <!-- 判断当前用户和对应数据是否有相应的交集 -->
       <div v-if="showEditArea" class="btn-group mt-5">
         <router-link type="button" class="btn btn-success" :to="{ name: 'create', query: { id: currentPost._id } }">
           编辑
@@ -35,20 +28,16 @@ import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { GlobalDataProps, PostProps, ImageProps, UserProps, ResponseType } from '@/store'
 import UserProfile from '@/components/UserProfile.vue'
-// import Modal from '@/components/Modal.vue'
-// import { createMessage } from '@/components/createMessage'
 
 export default defineComponent({
   name: 'post-detail',
   components: {
     UserProfile
-    // Modal
   },
   setup() {
     const store = useStore<GlobalDataProps>()
     const route = useRoute()
     const router = useRouter()
-    const modalIsVisible = ref(false)
     const currentId = route.params.id
     const md = new MarkdownIt()
     onMounted(() => {
@@ -61,8 +50,10 @@ export default defineComponent({
         return isHTML ? content : md.render(content)
       }
     })
+    // 是否有权限展示
     const showEditArea = computed(() => {
       const { isLogin, _id } = store.state.user
+      // 有当前文章用户， 并且已经登陆
       if (currentPost.value && currentPost.value.author && isLogin) {
         const postAuthor = currentPost.value.author as UserProps
         return postAuthor._id === _id
@@ -78,22 +69,11 @@ export default defineComponent({
         return null
       }
     })
-    const hideAndDelete = () => {
-      modalIsVisible.value = false
-      store.dispatch('deletePost', currentId).then((rawData: ResponseType<PostProps>) => {
-        // createMessage('删除成功，2秒后跳转到专栏首页', 'success', 2000)
-        setTimeout(() => {
-          router.push({ name: 'column', params: { id: rawData.data.column } })
-        }, 2000)
-      })
-    }
     return {
       currentPost,
       currentImageUrl,
       currentHTML,
-      showEditArea,
-      modalIsVisible,
-      hideAndDelete
+      showEditArea
     }
   }
 })

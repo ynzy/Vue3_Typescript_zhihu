@@ -7,6 +7,7 @@
       :action="'/upload'"
       :beforeUpload="uploadCheck"
       @file-uploaded="onFileUploaded"
+      :uploaded="uploadedData"
     >
       <h2>点击上传头图</h2>
       <template #loading>
@@ -74,7 +75,20 @@ export default defineComponent({
     const contentVal = ref('')
     const contentRules: RulesProp = [{ type: 'required', message: '文章详情不能为空' }]
     let imageId = ''
-    onMounted(() => {})
+    onMounted(async () => {
+      if (isEditMode) {
+        let [err, rawData] = await store.dispatch('fetchPost', route.query.id)
+        if (err) return console.log(err)
+        const currentPost = rawData.data
+        if (currentPost.image) {
+          uploadedData.value = { data: currentPost.image }
+        }
+        console.log(currentPost)
+
+        titleVal.value = currentPost.title
+        contentVal.value = currentPost.content || ''
+      }
+    })
     const onFormSubmit = async (result: boolean) => {
       if (result) {
         const { column, _id } = store.state.user

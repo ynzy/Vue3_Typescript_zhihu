@@ -19,7 +19,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, ref } from 'vue'
+import { defineComponent, PropType, ref, watch } from 'vue'
 import { upload } from '@/api/uploadController'
 type UploadStatus = 'ready' | 'loading' | 'success' | 'error'
 type CheckFunction = (file: File) => boolean
@@ -32,14 +32,26 @@ export default defineComponent({
     },
     beforeUpload: {
       type: Function as PropType<CheckFunction>
+    },
+    uploaded: {
+      type: Object
     }
   },
   inheritAttrs: false, // 如果你不希望组件的根元素继承特性，你可以在组件的选项中设置 inheritAttrs: false
   emits: ['file-uploaded', 'file-uploaded-error'],
   setup(props, context) {
     const fileInput = ref<HTMLInputElement | null>(null)
-    const fileStatus = ref<UploadStatus>('ready') //上传状态
-    const uploadedData = ref()
+    const fileStatus = ref<UploadStatus>(props.uploaded ? 'success' : 'ready') //上传状态
+    const uploadedData = ref(props.uploaded)
+    // 需要传入相应式对象，不是的话传入函数
+    watch(
+      () => props.uploaded,
+      newValue => {
+        if (!newValue) return
+        fileStatus.value = 'success'
+        uploadedData.value = newValue
+      }
+    )
     // 模拟点击inpu
     const triggerUpload = () => {
       if (fileInput.value) {

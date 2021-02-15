@@ -34,6 +34,7 @@ interface GlobalColumns {
   //扩展接口类型，添加一个是否请求后台的判断
   data: ListProps<ColumnProps>
   isLoaded: boolean
+  total: number
 }
 export interface PostProps {
   _id?: string
@@ -114,7 +115,7 @@ const store = createStore<GlobalDataProps>({
     error: { status: false },
     token: localStorage.getItem('token') || '',
     loading: false,
-    columns: { data: {}, isLoaded: false },
+    columns: { data: {}, isLoaded: false, total: 0 },
     posts: { data: {}, loadedColumns: [] },
     user: {
       isLogin: false
@@ -139,9 +140,14 @@ const store = createStore<GlobalDataProps>({
     createPost(state, newPost) {
       state.posts.data[newPost._id] = newPost
     },
-    fetchColumns(state, data) {
-      state.columns.data = arrToObj(data.list)
-      state.columns.isLoaded = true
+    fetchColumns(state, rawData) {
+      const { data } = state.columns
+      const { list, count } = rawData
+      state.columns = {
+        data: { ...data, ...arrToObj(list) },
+        total: count,
+        isLoaded: true
+      }
     },
     fetchColumn(state, data) {
       state.columns.data[data._id] = data
@@ -150,7 +156,7 @@ const store = createStore<GlobalDataProps>({
       state.posts.data = { ...state.posts.data, ...arrToObj(data.list) }
       state.posts.loadedColumns.push(columnId)
     },
-    fetchPost(state, { data: rawData, extraData: columnId }) {
+    fetchPost(state, rawData) {
       state.posts.data[rawData._id] = rawData
     },
     updatePost(state, data) {
@@ -175,20 +181,21 @@ const store = createStore<GlobalDataProps>({
   },
   actions: {
     fetchColumns({ state, commit }, params: paging) {
-      if (state.columns.isLoaded) return
-      getAndCommit(getColumns, params, 'fetchColumns', commit)
+      // if (state.columns.isLoaded) return
+      return asyncAndCommit(getColumns, params, 'fetchColumns', commit)
     },
     fetchColumn({ state, commit }, params: IGetCid) {
       if (state.columns.data[params.cid]) return
-      getAndCommit(getColumn, params, 'fetchColumn', commit)
+      return asyncAndCommit(getColumn, params, 'fetchColumn', commit)
     },
     fetchPosts({ state, commit }, params: IgetPosts) {
       if (state.posts.loadedColumns.includes(params.cid)) return
-      asyncAndCommit(getColumnPosts, params, 'fetchPosts', commit, params.cid)
+      return asyncAndCommit(getColumnPosts, params, 'fetchPosts', commit, params.cid)
     },
     // 获取文章详情
     fetchPost({ state, commit }, id) {
       const currentPost = state.posts.data[id]
+      // 判断有没有id 或者 内容详情，是否需要请求获取详情
       if (!currentPost || !currentPost.content) {
         return asyncAndCommit(getPost, { cid: id }, 'fetchPost', commit)
       } else {

@@ -15,7 +15,7 @@
     <h4 class="font-weight-bold text-center">发现精彩</h4>
     <ColumnList :list="list"></ColumnList>
     <div class="text-center">
-      <button class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25">
+      <button class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25" @click="loadMorePage" v-if="!isLastPage">
         加载更多
       </button>
     </div>
@@ -27,6 +27,7 @@ import ColumnList from '@/components/ColumnList.vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
 import { computed, onMounted } from 'vue'
+import { useLoadMore } from '@/hooks/useLoadMore'
 export default {
   name: 'Home',
   components: {
@@ -34,12 +35,16 @@ export default {
   },
   setup() {
     const store = useStore<GlobalDataProps>()
-    let list = computed(() => store.getters.getColumns)
+    const list = computed(() => store.getters.getColumns)
+    const total = computed(() => store.state.columns.total)
     onMounted(() => {
-      store.dispatch('fetchColumns', { currentPage: 1, pageSize: 5 })
+      store.dispatch('fetchColumns', { currentPage: 1, pageSize: 6 })
     })
+    const { loadMorePage, isLastPage } = useLoadMore('fetchColumns', total, { currentPage: 2, pageSize: 6 })
     return {
-      list
+      list,
+      loadMorePage,
+      isLastPage
     }
   }
 }

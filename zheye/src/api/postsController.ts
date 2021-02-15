@@ -21,7 +21,7 @@ import { paging, IGetCid, ICreatePost } from './index'
  * 获得一个专栏详情
  * @param {} cid
  */
-export const getColumn = (params: IGetCid) => {
+export const getPost = (params: IGetCid) => {
   return awaitWrap(
     request({
       url: `/posts/${params.cid}`,

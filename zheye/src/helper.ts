@@ -43,3 +43,28 @@ export function beforeUploadCheck(file: File, condition: CheckCondition) {
     error
   }
 }
+
+/**
+ * 添加头像
+ * @param data
+ * @param width
+ * @param height
+ */
+export function addColumnAvatar(data: ColumnProps | UserProps, width: number, height: number) {
+  if (data.avatar) {
+    generateFitUrl(data.avatar, width, height)
+  } else {
+    const parseCol = data as ColumnProps
+    data.avatar = {
+      fitUrl: require(parseCol.title ? '@/assets/column.jpg' : '@/assets/avatar.jpg')
+    }
+  }
+}
+
+/**
+ * 对象转数组
+ * @param obj
+ */
+export const objToArr = <T>(obj: { [key: string]: T }) => {
+  return Object.keys(obj).map(key => obj[key])
+}

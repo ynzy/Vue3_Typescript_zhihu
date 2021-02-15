@@ -2,7 +2,7 @@ import { Commit, createStore, useStore } from 'vuex'
 import { IGetCid, IgetPosts, ILogin, paging } from './api/index'
 import { getColumn, getColumns, getColumnPosts } from './api/columnController'
 import { getCurrentUser, login } from './api/authController'
-import { post } from './api/postsController'
+import { post, getPost } from './api/postsController'
 export interface ResponseType<P = {}> {
   code: number
   msg: string
@@ -109,6 +109,9 @@ const store = createStore<GlobalDataProps>({
     fetchPosts(state, data) {
       state.posts = data.list
     },
+    fetchPost(state, rawData) {
+      state.posts[rawData.data._id] = rawData.data
+    },
     setLoading(state, status) {
       state.loading = status
     },
@@ -132,6 +135,15 @@ const store = createStore<GlobalDataProps>({
     },
     fetchPosts({ commit }, params: IgetPosts) {
       getAndCommit(getColumnPosts, params, 'fetchPosts', commit)
+    },
+    // 获取文章详情
+    fetchPost({ state, commit }, id) {
+      const currentPost = state.posts[id]
+      if (!currentPost || !currentPost.content) {
+        return getAndCommit(getPost, { cid: id }, 'fetchPost', commit)
+      } else {
+        return Promise.resolve({ data: currentPost })
+      }
     },
     fetchCurrentUser({ commit }) {
       return getAndCommit(getCurrentUser, null, 'fetchCurrentUser', commit)

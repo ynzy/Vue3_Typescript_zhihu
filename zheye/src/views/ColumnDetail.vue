@@ -17,7 +17,7 @@
 import { computed, defineComponent, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import PostList from '@/components/PostList.vue'
-import { GlobalDataProps, ColumnProps, PostProps } from '@/store'
+import { GlobalDataProps, ColumnProps } from '@/store'
 import { useStore } from 'vuex'
 import { addColumnAvatar } from '@/helper'
 export default defineComponent({

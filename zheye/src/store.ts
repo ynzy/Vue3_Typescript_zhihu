@@ -94,6 +94,9 @@ const store = createStore<GlobalDataProps>({
     },
     getPostsByCid: state => (cid: string) => {
       return state.posts.filter(post => post.column === cid)
+    },
+    getCurrentPost: state => (id: any) => {
+      return state.posts[id]
     }
   },
   mutations: {
@@ -110,7 +113,7 @@ const store = createStore<GlobalDataProps>({
       state.posts = data.list
     },
     fetchPost(state, rawData) {
-      state.posts[rawData.data._id] = rawData.data
+      state.posts[rawData._id] = rawData
     },
     setLoading(state, status) {
       state.loading = status

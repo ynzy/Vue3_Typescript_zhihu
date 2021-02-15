@@ -3,22 +3,7 @@ import { awaitWrap } from '@/utils/index.ts'
 import { paging, IGetCid, ICreatePost } from './index'
 
 /**
- * 获取专栏列表
- * @param {} currentPage
- * @param {} pageSize
- */
-/* export const getColumns = (params: paging) => {
-  return awaitWrap(
-    request({
-      url: '/columns',
-      method: 'get',
-      params,
-      loading: false
-    })
-  )
-} */
-/**
- * 获得一个专栏详情
+ * 获得单个文章信息
  * @param {} cid
  */
 export const getPost = (params: IGetCid) => {

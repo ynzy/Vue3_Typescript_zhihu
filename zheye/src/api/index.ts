@@ -19,9 +19,9 @@ export interface IRegister {
   nickName: string
 }
 export interface ICreatePost {
-  title: string
-  content: string
-  image: string
-  column: string
-  author: string
+  title?: string
+  content?: string
+  image?: string
+  column?: string
+  author?: string
 }

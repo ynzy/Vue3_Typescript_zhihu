@@ -1,6 +1,6 @@
 <template>
   <div class="create-post-page">
-    <h4>新建文章</h4>
+    <h4>{{ isEditMode ? '编辑文章' : '新建文章' }}</h4>
 
     <Uploader
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
@@ -39,7 +39,7 @@
         />
       </div>
       <template #submit>
-        <button class="btn btn-primary btn-large">发表文章</button>
+        <button class="btn btn-primary btn-large">{{ isEditMode ? '更新文章' : '发表文章' }}</button>
       </template>
     </validate-form>
   </div>
@@ -83,8 +83,6 @@ export default defineComponent({
         if (currentPost.image) {
           uploadedData.value = { data: currentPost.image }
         }
-        console.log(currentPost)
-
         titleVal.value = currentPost.title
         contentVal.value = currentPost.content || ''
       }
@@ -102,7 +100,14 @@ export default defineComponent({
           if (imageId) {
             newPost.image = imageId
           }
-          let [err, res] = await store.dispatch('createPost', newPost)
+          const actionName = isEditMode ? 'updatePost' : 'createPost'
+          const sendData = isEditMode
+            ? {
+                id: route.query.id,
+                payload: newPost
+              }
+            : newPost
+          let [err, res] = await store.dispatch(actionName, sendData)
           if (err) {
             createMessage(err, 'error')
             return

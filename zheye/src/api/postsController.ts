@@ -16,19 +16,33 @@ export const getPost = (params: IGetCid) => {
   )
 }
 /**
- * 新建一篇文章
+ * 更新单个文章信息
  * @param {} title
  * @param {} content
  * @param {} image
  * @param {} column
  * @param {} author
  */
-export const post = (data: ICreatePost) => {
+export const updatePost = (data: any) => {
+  let { id, payload } = data
   return awaitWrap(
     request({
-      url: `/posts`,
-      method: 'post',
-      data,
+      url: `/posts/${id}`,
+      method: 'patch',
+      data: payload,
+      loading: false
+    })
+  )
+}
+/**
+ * 获得单个文章信息
+ * @param {} cid
+ */
+export const post = (params: IGetCid) => {
+  return awaitWrap(
+    request({
+      url: `/posts/${params.cid}`,
+      method: 'get',
       loading: false
     })
   )

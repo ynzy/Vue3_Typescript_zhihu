@@ -2,7 +2,7 @@ import { Commit, createStore, useStore } from 'vuex'
 import { IGetCid, IgetPosts, ILogin, paging } from './api/index'
 import { getColumn, getColumns, getColumnPosts } from './api/columnController'
 import { getCurrentUser, login } from './api/authController'
-import { post, getPost } from './api/postsController'
+import { post, getPost, updatePost } from './api/postsController'
 export interface ResponseType<P = {}> {
   code: number
   msg: string
@@ -76,6 +76,21 @@ const postAndCommit = async (fn: Function, data: any, mutationName: string, comm
   }
 }
 
+const asyncAndCommit = async (fn: Function, data: any, mutationName: string, commit: Commit) => {
+  try {
+    let [err, res] = await fn(data)
+    if (err) {
+      console.log(err)
+      return [err, res]
+    }
+    console.log(res)
+    commit(mutationName, res && res.data)
+    return [err, res]
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 const store = createStore<GlobalDataProps>({
   state: {
     error: { status: false },
@@ -113,7 +128,12 @@ const store = createStore<GlobalDataProps>({
       state.posts = data.list
     },
     fetchPost(state, rawData) {
+      console.log(rawData)
       state.posts[rawData._id] = rawData
+    },
+    updatePost(state, data) {
+      console.log(data)
+      state.posts[data._id] = data
     },
     setLoading(state, status) {
       state.loading = status
@@ -143,9 +163,10 @@ const store = createStore<GlobalDataProps>({
     fetchPost({ state, commit }, id) {
       const currentPost = state.posts[id]
       if (!currentPost || !currentPost.content) {
-        return getAndCommit(getPost, { cid: id }, 'fetchPost', commit)
+        return asyncAndCommit(getPost, { cid: id }, 'fetchPost', commit)
       } else {
-        return Promise.resolve({ data: currentPost })
+        let res = { data: currentPost }
+        return [null, res]
       }
     },
     fetchCurrentUser({ commit }) {
@@ -156,6 +177,9 @@ const store = createStore<GlobalDataProps>({
     },
     createPost({ commit }, data) {
       return postAndCommit(post, data, 'createPost', commit)
+    },
+    updatePost({ commit }, { id, payload }) {
+      return asyncAndCommit(updatePost, { id, payload }, 'updatePost', commit)
     },
     // 组合action
     loadinAndFetch({ dispatch }, loginData) {

@@ -2,7 +2,7 @@ import { Commit, createStore, useStore } from 'vuex'
 import { IGetCid, IgetPosts, ILogin, paging } from './api/index'
 import { getColumn, getColumns, getColumnPosts } from './api/columnController'
 import { getCurrentUser, login } from './api/authController'
-import { post, getPost, updatePost } from './api/postsController'
+import { post, getPost, updatePost, deletePost } from './api/postsController'
 export interface ResponseType<P = {}> {
   code: number
   msg: string
@@ -135,6 +135,9 @@ const store = createStore<GlobalDataProps>({
       console.log(data)
       state.posts[data._id] = data
     },
+    deletePost(state, data) {
+      delete state.posts[data._id]
+    },
     setLoading(state, status) {
       state.loading = status
     },
@@ -169,6 +172,7 @@ const store = createStore<GlobalDataProps>({
         return [null, res]
       }
     },
+
     fetchCurrentUser({ commit }) {
       return getAndCommit(getCurrentUser, null, 'fetchCurrentUser', commit)
     },
@@ -180,6 +184,9 @@ const store = createStore<GlobalDataProps>({
     },
     updatePost({ commit }, { id, payload }) {
       return asyncAndCommit(updatePost, { id, payload }, 'updatePost', commit)
+    },
+    deletePost({ commit }, cid) {
+      return asyncAndCommit(deletePost, { cid }, 'deletePost', commit)
     },
     // 组合action
     loadinAndFetch({ dispatch }, loginData) {

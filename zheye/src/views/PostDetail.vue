@@ -80,14 +80,14 @@ export default defineComponent({
         return null
       }
     })
-    const hideAndDelete = () => {
+    const hideAndDelete = async () => {
       modalIsVisible.value = false
-      store.dispatch('deletePost', currentId).then((rawData: ResponseType<PostProps>) => {
-        createMessage('删除成功，2秒后跳转到专栏首页', 'success', 2000)
-        setTimeout(() => {
-          router.push({ name: 'column', params: { id: rawData.data.column } })
-        }, 2000)
-      })
+      let [err, rawData] = await store.dispatch('deletePost', currentId)
+      if (err) return console.log(err)
+      createMessage('删除成功，2秒后跳转到专栏首页', 'success', 2000)
+      setTimeout(() => {
+        router.replace({ name: 'column', params: { id: rawData.data.column } })
+      }, 2000)
     }
     return {
       currentPost,

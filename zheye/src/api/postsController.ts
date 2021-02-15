@@ -47,3 +47,16 @@ export const post = (params: IGetCid) => {
     })
   )
 }
+/**
+ * 删除单个文章信息
+ * @param {} cid
+ */
+export const deletePost = (params: IGetCid) => {
+  return awaitWrap(
+    request({
+      url: `/posts/${params.cid}`,
+      method: 'delete',
+      loading: true
+    })
+  )
+}

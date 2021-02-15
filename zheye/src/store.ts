@@ -3,6 +3,7 @@ import { IGetCid, IgetPosts, ILogin, paging } from './api/index'
 import { getColumn, getColumns, getColumnPosts } from './api/columnController'
 import { getCurrentUser, login } from './api/authController'
 import { post, getPost, updatePost, deletePost } from './api/postsController'
+import { arrToObj, objToArr } from './helper'
 export interface ResponseType<P = {}> {
   code: number
   msg: string
@@ -29,6 +30,11 @@ export interface ColumnProps {
   avatar?: ImageProps
   description: string
 }
+interface GlobalColumns {
+  //扩展接口类型，添加一个是否请求后台的判断
+  data: ListProps<ColumnProps>
+  isLoaded: boolean
+}
 export interface PostProps {
   _id?: string
   title: string
@@ -40,16 +46,25 @@ export interface PostProps {
   author?: string | UserProps
   isHTML?: boolean
 }
+interface GlobalPosts {
+  data: ListProps<PostProps>
+  loadedColumns: string[] // 加载过的columnid放在数组中
+}
 export interface GlobalErrorProps {
   status: boolean
   message?: string
+}
+
+// 泛型定义的通用接口
+interface ListProps<P> {
+  [id: string]: P
 }
 export interface GlobalDataProps {
   error: GlobalErrorProps
   token: string
   loading: boolean
-  columns: ColumnProps[]
-  posts: PostProps[]
+  columns: GlobalColumns
+  posts: GlobalPosts
   user: UserProps
 }
 
@@ -76,15 +91,18 @@ const postAndCommit = async (fn: Function, data: any, mutationName: string, comm
   }
 }
 
-const asyncAndCommit = async (fn: Function, data: any, mutationName: string, commit: Commit) => {
+const asyncAndCommit = async (fn: Function, data: any, mutationName: string, commit: Commit, extraData?: any) => {
   try {
     let [err, res] = await fn(data)
     if (err) {
       console.log(err)
       return [err, res]
     }
-    console.log(res)
-    commit(mutationName, res && res.data)
+    if (extraData) {
+      commit(mutationName, { data: res.data, extraData })
+    } else {
+      commit(mutationName, res.data)
+    }
     return [err, res]
   } catch (error) {
     console.log(error)
@@ -96,47 +114,50 @@ const store = createStore<GlobalDataProps>({
     error: { status: false },
     token: localStorage.getItem('token') || '',
     loading: false,
-    columns: [],
-    posts: [],
+    columns: { data: {}, isLoaded: false },
+    posts: { data: {}, loadedColumns: [] },
     user: {
       isLogin: false
     }
   },
   getters: {
+    getColumns: state => {
+      return objToArr(state.columns.data)
+    },
     // 返回一个函数，传参
     getColumnById: state => (id: string) => {
-      return state.columns.find(c => c._id === id)
+      return state.columns.data[id]
     },
     getPostsByCid: state => (cid: string) => {
-      return state.posts.filter(post => post.column === cid)
+      return objToArr(state.posts.data).filter(post => post.column === cid)
     },
     getCurrentPost: state => (id: any) => {
-      return state.posts[id]
+      return state.posts.data[id]
     }
   },
   mutations: {
     createPost(state, newPost) {
-      state.posts.push(newPost)
+      state.posts.data[newPost._id] = newPost
     },
     fetchColumns(state, data) {
-      state.columns = data.list
+      state.columns.data = arrToObj(data.list)
+      state.columns.isLoaded = true
     },
     fetchColumn(state, data) {
-      state.columns = [data]
+      state.columns.data[data._id] = data
     },
-    fetchPosts(state, data) {
-      state.posts = data.list
+    fetchPosts(state, { data, extraData: columnId }) {
+      state.posts.data = { ...state.posts.data, ...arrToObj(data.list) }
+      state.posts.loadedColumns.push(columnId)
     },
-    fetchPost(state, rawData) {
-      console.log(rawData)
-      state.posts[rawData._id] = rawData
+    fetchPost(state, { data: rawData, extraData: columnId }) {
+      state.posts.data[rawData._id] = rawData
     },
     updatePost(state, data) {
-      console.log(data)
-      state.posts[data._id] = data
+      state.posts.data[data._id] = data
     },
     deletePost(state, data) {
-      delete state.posts[data._id]
+      delete state.posts.data[data._id]
     },
     setLoading(state, status) {
       state.loading = status
@@ -153,18 +174,21 @@ const store = createStore<GlobalDataProps>({
     }
   },
   actions: {
-    fetchColumns({ commit }, params: paging) {
+    fetchColumns({ state, commit }, params: paging) {
+      if (state.columns.isLoaded) return
       getAndCommit(getColumns, params, 'fetchColumns', commit)
     },
-    fetchColumn({ commit }, params: IGetCid) {
+    fetchColumn({ state, commit }, params: IGetCid) {
+      if (state.columns.data[params.cid]) return
       getAndCommit(getColumn, params, 'fetchColumn', commit)
     },
-    fetchPosts({ commit }, params: IgetPosts) {
-      getAndCommit(getColumnPosts, params, 'fetchPosts', commit)
+    fetchPosts({ state, commit }, params: IgetPosts) {
+      if (state.posts.loadedColumns.includes(params.cid)) return
+      asyncAndCommit(getColumnPosts, params, 'fetchPosts', commit, params.cid)
     },
     // 获取文章详情
     fetchPost({ state, commit }, id) {
-      const currentPost = state.posts[id]
+      const currentPost = state.posts.data[id]
       if (!currentPost || !currentPost.content) {
         return asyncAndCommit(getPost, { cid: id }, 'fetchPost', commit)
       } else {

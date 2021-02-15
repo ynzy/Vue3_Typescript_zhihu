@@ -34,7 +34,7 @@ export default {
   },
   setup() {
     const store = useStore<GlobalDataProps>()
-    let list = computed(() => store.state.columns)
+    let list = computed(() => store.getters.getColumns)
     onMounted(() => {
       store.dispatch('fetchColumns', { currentPage: 1, pageSize: 5 })
     })

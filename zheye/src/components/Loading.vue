@@ -6,7 +6,7 @@
     >
       <div class="loading-content">
         <div class="spinner-border text-primary" role="status">
-          <!-- <span class="sr-only">{{ text || 'loading'}}</span> -->
+          <span class="visually-hidden">{{ text || 'loading' }}</span>
         </div>
         <p v-if="text" class="text-primary small">{{ text || 'loading...' }}</p>
       </div>

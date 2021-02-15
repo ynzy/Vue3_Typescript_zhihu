@@ -6,7 +6,7 @@
       v-if="isVisible"
     >
       <span>{{ message }}</span>
-      <button type="button" class="close" aria-label="Close" @click.prevent="hide">
+      <button type="button" class="btn-close" aria-label="Close" @click.prevent="hide">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>

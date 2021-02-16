@@ -30,10 +30,10 @@ export interface ColumnProps {
   avatar?: ImageProps
   description: string
 }
-interface GlobalColumns {
+interface GlobalColumnsProps {
   //扩展接口类型，添加一个是否请求后台的判断
   data: ListProps<ColumnProps>
-  isLoaded: boolean
+  currentPage: number
   total: number
 }
 export interface PostProps {
@@ -47,7 +47,7 @@ export interface PostProps {
   author?: string | UserProps
   isHTML?: boolean
 }
-interface GlobalPosts {
+interface GlobalPostsProps {
   data: ListProps<PostProps>
   loadedColumns: string[] // 加载过的columnid放在数组中
 }
@@ -64,8 +64,8 @@ export interface GlobalDataProps {
   error: GlobalErrorProps
   token: string
   loading: boolean
-  columns: GlobalColumns
-  posts: GlobalPosts
+  columns: GlobalColumnsProps
+  posts: GlobalPostsProps
   user: UserProps
 }
 
@@ -115,7 +115,7 @@ const store = createStore<GlobalDataProps>({
     error: { status: false },
     token: localStorage.getItem('token') || '',
     loading: false,
-    columns: { data: {}, isLoaded: false, total: 0 },
+    columns: { data: {}, currentPage: 0, total: 0 },
     posts: { data: {}, loadedColumns: [] },
     user: {
       isLogin: false
@@ -142,11 +142,11 @@ const store = createStore<GlobalDataProps>({
     },
     fetchColumns(state, rawData) {
       const { data } = state.columns
-      const { list, count } = rawData
+      const { list, count, currentPage } = rawData
       state.columns = {
         data: { ...data, ...arrToObj(list) },
         total: count,
-        isLoaded: true
+        currentPage: +currentPage
       }
     },
     fetchColumn(state, data) {
@@ -182,7 +182,9 @@ const store = createStore<GlobalDataProps>({
   actions: {
     fetchColumns({ state, commit }, params: paging) {
       // if (state.columns.isLoaded) return
-      return asyncAndCommit(getColumns, params, 'fetchColumns', commit)
+      if (state.columns.currentPage < params.currentPage) {
+        return asyncAndCommit(getColumns, params, 'fetchColumns', commit)
+      }
     },
     fetchColumn({ state, commit }, params: IGetCid) {
       if (state.columns.data[params.cid]) return
@@ -203,7 +205,6 @@ const store = createStore<GlobalDataProps>({
         return [null, res]
       }
     },
-
     fetchCurrentUser({ commit }) {
       return getAndCommit(getCurrentUser, null, 'fetchCurrentUser', commit)
     },

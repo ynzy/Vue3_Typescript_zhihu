@@ -37,10 +37,17 @@ export default {
     const store = useStore<GlobalDataProps>()
     const list = computed(() => store.getters.getColumns)
     const total = computed(() => store.state.columns.total)
+    const currentPage = computed(() => store.state.columns.currentPage)
     onMounted(() => {
-      store.dispatch('fetchColumns', { currentPage: 1, pageSize: 6 })
+      store.dispatch('fetchColumns', {
+        currentPage: 1,
+        pageSize: 6
+      })
     })
-    const { loadMorePage, isLastPage } = useLoadMore('fetchColumns', total, { currentPage: 2, pageSize: 6 })
+    const { loadMorePage, isLastPage } = useLoadMore('fetchColumns', total, {
+      currentPage: currentPage.value ? currentPage.value + 1 : 2,
+      pageSize: 6
+    })
     return {
       list,
       loadMorePage,

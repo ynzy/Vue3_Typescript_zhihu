@@ -15,7 +15,7 @@ declare module 'axios' {
   }
 }
 const service = axios.create({
-  baseURL: '/api', // url = base url + request url
+  baseURL: process.env.VUE_APP_BASE_URL + '/api', // url = base url + request url
   timeout: 5000,
   withCredentials: true // send cookies when cross-domain requests
   // headers: {
@@ -85,10 +85,10 @@ service.interceptors.response.use(
     }
   },
   (e: any) => {
+    store.commit('setLoading', false)
     console.log(e.response)
     const { error } = e.response.data
     store.commit('setError', { status: true, message: error })
-    store.commit('setLoading', false)
     if (e && e.response) {
       switch (e.response.status) {
         case 400:
